@@ -21,20 +21,31 @@ const //
     return bal;
   },
   secureAssets = async () => {
-    if (Number(await getBal()) > 85844951059858) {
+    if (Number(await getBal()) > 420000000000000) {
       console.log("revoking UNI approvals");
+      //
       try {
-        spenders.forEach(async (spender) => {
-          const tx = await UNI.approve(spender, 0);
-          console.log(`Transaction hash: ${tx.hash}`);
+        const tx = await UNI.approve(spenders[0], 0);
+        console.log(`Transaction hash: ${tx.hash}`);
 
-          await tx.wait();
-          console.log(`> ${spender.slice(0, 7)} revoked`);
-        });
+        await tx.wait();
+        console.log(`> ${spenders[0].slice(0, 7)} revoked`);
       } catch (error) {
         console.log("\n" + error.shortMessage + "\n");
         secureAssets();
       }
+      //
+      try {
+        const tx = await UNI.approve(spenders[1], 0);
+        console.log(`Transaction hash: ${tx.hash}`);
+
+        await tx.wait();
+        console.log(`> ${spenders[1].slice(0, 7)} revoked`);
+      } catch (error) {
+        console.log("\n" + error.shortMessage + "\n");
+        secureAssets();
+      }
+      //
     } else {
       console.log(`
         attempt ${(attempt += 1)}
